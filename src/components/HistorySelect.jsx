@@ -1,5 +1,6 @@
+import CustomSelect from './CustomSelect';
+
 function HistorySelect({ history, onSelect }) {
-  // Получаем уникальные задачи, сохраняя последнюю длительность для каждой
   const uniqueTasks = history.reduce((acc, session) => {
     if (!acc[session.tag]) {
       acc[session.tag] = {
@@ -12,33 +13,29 @@ function HistorySelect({ history, onSelect }) {
 
   const tasks = Object.values(uniqueTasks);
 
-  const handleSelect = (e) => {
-    const selectedTag = e.target.value;
-    if (selectedTag) {
-      const task = uniqueTasks[selectedTag];
+  const handleSelect = (selectedValue) => {
+    if (selectedValue) {
+      const task = uniqueTasks[selectedValue];
       onSelect(task.tag, task.duration ? task.duration.toString() : '');
     } else {
-      onSelect('', ''); // Сброс, если выбрана "Новая задача"
+      onSelect('', '');
     }
   };
 
   if (tasks.length === 0) {
-    return null; // Не рендерим компонент, если история пуста
+    return null;
   }
 
+  const options = tasks.map(task => ({ value: task.tag, label: task.tag }));
+
   return (
-    <div>
-      <label htmlFor="history-select" className="input-label">Прошлые задачи</label>
-      <select
-        id="history-select"
-        onChange={handleSelect}
-        className="select-field"
-      >
-        <option value="">— Новая задача —</option>
-        {tasks.map(({ tag }) => (
-          <option key={tag} value={tag}>{tag}</option>
-        ))}
-      </select>
+    <div className="history-select-container">
+      <label className="input-label">Прошлые задачи</label>
+      <CustomSelect
+        options={options}
+        onSelect={handleSelect}
+        placeholder="Новая задача"
+      />
     </div>
   );
 }
