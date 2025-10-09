@@ -1,16 +1,31 @@
-# React + Vite
+# Focus Timer - Ваш умный таймер для продуктивности
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Это простое, но мощное приложение для управления временем, созданное для помощи в концентрации и отслеживании ваших рабочих сессий. Используйте его для применения техник, таких как метод Помодоро, или просто для учета времени, потраченного на различные задачи.
 
-Currently, two official plugins are available:
+## ✨ Особенности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Простой таймер:** Легко запускайте, ставьте на паузу и сбрасывайте таймер.
+- **Теги для задач:** Присваивайте теги каждой сессии (например, "Работа", "Учеба", "Проект X"), чтобы понимать, на что уходит ваше время.
+- **История сессий:** Ваша история автоматически сохраняется в браузере.
+- **Визуальная статистика:** Анализируйте свою продуктивность с помощью наглядных диаграмм и детальной таблицы, которые показывают распределение времени по задачам за разные периоды (день, неделя, месяц).
+- **Темная тема:** Комфортный режим для работы в любое время суток.
 
-## React Compiler
+## 🚀 Установка и запуск
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1.  **Клонируйте репозиторий** (если это необходимо).
+2.  **Установите зависимости:**
+    ```bash
+    npm install
+    ```
+3.  **Запустите приложение в режиме разработки:**
+    ```bash
+    npm run dev
+    ```
+    Приложение будет доступно по адресу `http://localhost:5173` (или другому порту, указанному в консоли).
 
-## Expanding the ESLint configuration
+## 🛠️ Стек технологий
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Chart.js](https://www.chartjs.org/) для визуализации данных

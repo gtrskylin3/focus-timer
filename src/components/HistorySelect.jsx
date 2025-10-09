@@ -1,42 +1,41 @@
-// src/components/HistorySelect.jsx
-import React from 'react';
-
 function HistorySelect({ history, onSelect }) {
-  // JS: Получаем уникальные теги из истории (Set для уникальности)
-  const uniqueTags = [...new Set(history.map(session => session.tag))];
+  // Получаем уникальные задачи, сохраняя последнюю длительность для каждой
+  const uniqueTasks = history.reduce((acc, session) => {
+    if (!acc[session.tag]) {
+      acc[session.tag] = {
+        tag: session.tag,
+        duration: session.duration || Math.floor(session.elapsed / 60)
+      };
+    }
+    return acc;
+  }, {});
 
-  // JS: Функция для получения данных по тегу (последняя сессия для примера)
-  const getSessionData = (tag) => {
-    const sessionsForTag = history.filter(s => s.tag === tag);
-    if (sessionsForTag.length === 0) return { duration: null };
-    const lastSession = sessionsForTag[sessionsForTag.length - 1];  // Последняя
-    return {
-      tag,
-      duration: lastSession.duration || Math.floor(lastSession.elapsed / 60)  // Если null, elapsed в мин
-    };
-  };
+  const tasks = Object.values(uniqueTasks);
 
   const handleSelect = (e) => {
     const selectedTag = e.target.value;
     if (selectedTag) {
-      const data = getSessionData(selectedTag);
-      onSelect(data.tag, data.duration ? data.duration.toString() : '');  // Callback: тег + duration как строка
+      const task = uniqueTasks[selectedTag];
+      onSelect(task.tag, task.duration ? task.duration.toString() : '');
+    } else {
+      onSelect('', ''); // Сброс, если выбрана "Новая задача"
     }
   };
 
-  if (uniqueTags.length === 0) {
-    return <p className="text-sm text-gray-500">Нет истории сессий</p>;
+  if (tasks.length === 0) {
+    return null; // Не рендерим компонент, если история пуста
   }
 
   return (
-    <div className="mb-4">
-      <label className="block text-sm font-medium text-gray-700 mb-2">Выберите прошлую задачу:</label>
+    <div>
+      <label htmlFor="history-select" className="input-label">Прошлые задачи</label>
       <select
+        id="history-select"
         onChange={handleSelect}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="select-field"
       >
         <option value="">— Новая задача —</option>
-        {uniqueTags.map(tag => (
+        {tasks.map(({ tag }) => (
           <option key={tag} value={tag}>{tag}</option>
         ))}
       </select>
