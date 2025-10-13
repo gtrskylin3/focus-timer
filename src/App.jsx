@@ -14,6 +14,8 @@ const getInitialTimerState = () => {
       const parsed = JSON.parse(savedState);
       return {
         tag: parsed.tag || '',
+        hours: parsed.hours || '',
+        minutes: parsed.minutes || '',
         durationInMinutes: parsed.durationInMinutes || '',
         timeLeft: parsed.timeLeft || 0,
         isRunning: false, // Всегда начинаем в состоянии паузы при перезагрузке
@@ -27,6 +29,8 @@ const getInitialTimerState = () => {
   }
   return {
     tag: '',
+    hours: '',
+    minutes: '',
     durationInMinutes: '',
     timeLeft: 0,
     isRunning: false,
@@ -57,12 +61,10 @@ const getInitialDarkMode = () => {
 
 function App() {
   const [timerState, setTimerState] = useState(getInitialTimerState);
-  const { tag, durationInMinutes, timeLeft, isRunning, elapsedTime, savedInitialTime, startTimestamp } = timerState;
+  const { tag, hours, minutes, durationInMinutes, timeLeft, isRunning, elapsedTime, savedInitialTime, startTimestamp } = timerState;
   
   const [history, setHistory] = useState(getInitialHistory);
   const [darkMode, setDarkMode] = useState(getInitialDarkMode);
-
-  const initialTime = durationInMinutes ? parseInt(durationInMinutes) * 60 : null;
 
   // --- Effects ---
 
@@ -90,22 +92,27 @@ function App() {
     if (isRunning) {
       intervalId = setInterval(() => {
         setTimerState(prev => {
+          if (!prev.startTimestamp) return prev; // Защита
+
+          const elapsed = Math.floor((Date.now() - prev.startTimestamp) / 1000);
+
           // Режим обратного отсчета
           if (prev.savedInitialTime !== null) {
-            const newTime = prev.timeLeft - 1;
-            if (newTime <= 0) {
-              completeSession(prev.savedInitialTime, prev.elapsedTime + 1, prev.startTimestamp);
-              return { ...prev, timeLeft: 0, isRunning: false };
+            const newTimeLeft = prev.savedInitialTime - elapsed;
+            if (newTimeLeft <= 0) {
+              completeSession(prev.savedInitialTime, prev.savedInitialTime, prev.startTimestamp);
+              return { ...prev, timeLeft: 0, isRunning: false, elapsedTime: prev.savedInitialTime };
             }
-            return { ...prev, timeLeft: newTime, elapsedTime: prev.elapsedTime + 1 };
+            return { ...prev, timeLeft: newTimeLeft, elapsedTime: elapsed };
           }
+          
           // Режим накопления
-          return { ...prev, elapsedTime: prev.elapsedTime + 1 };
+          return { ...prev, elapsedTime: elapsed };
         });
       }, 1000);
     }
     return () => clearInterval(intervalId);
-  }, [isRunning]);
+  }, [isRunning, startTimestamp]);
 
   // --- Functions ---
 
@@ -132,7 +139,7 @@ function App() {
       savedInitialTime: newInitialTime,
       startTimestamp: Date.now() - prev.elapsedTime * 1000, // Учитываем уже прошедшее время при возобновлении
       isRunning: true,
-      timeLeft: newInitialTime !== null ? (prev.timeLeft > 0 ? prev.timeLeft : newInitialTime) : 0,
+      timeLeft: newInitialTime !== null ? (prev.timeLeft > 0 && prev.timeLeft < newInitialTime ? prev.timeLeft : newInitialTime) : 0,
     }));
   };
 
@@ -163,14 +170,45 @@ function App() {
 
   const handleHistorySelect = (selectedTag, selectedDuration) => {
     const newInitialTime = selectedDuration ? parseInt(selectedDuration) * 60 : null;
+    const newHours = selectedDuration ? Math.floor(selectedDuration / 60).toString() : '';
+    const newMinutes = selectedDuration ? (selectedDuration % 60).toString() : '';
+
     setTimerState(prev => ({
       ...prev,
       tag: selectedTag,
       durationInMinutes: selectedDuration,
+      hours: newHours,
+      minutes: newMinutes,
       elapsedTime: 0,
       timeLeft: newInitialTime || 0,
       savedInitialTime: newInitialTime,
       isRunning: false,
+    }));
+  };
+
+  const handleDurationChange = ({ hours: newHours, minutes: newMinutes }) => {
+    const currentHours = newHours !== undefined ? newHours : hours;
+    const currentMinutes = newMinutes !== undefined ? newMinutes : minutes;
+
+    const hoursNum = currentHours === '' ? 0 : parseInt(currentHours, 10);
+    const minutesNum = currentMinutes === '' ? 0 : parseInt(currentMinutes, 10);
+
+    if (isNaN(hoursNum) || isNaN(minutesNum)) return;
+
+    const totalMinutes = hoursNum * 60 + minutesNum;
+
+    if (totalMinutes > 16 * 60) {
+      alert('Максимальная продолжительность таймера - 16 часов.');
+      return;
+    }
+
+    const newDurationInMinutes = totalMinutes > 0 ? String(totalMinutes) : '';
+
+    setTimerState(prev => ({
+      ...prev,
+      hours: currentHours,
+      minutes: currentMinutes,
+      durationInMinutes: newDurationInMinutes,
     }));
   };
 
@@ -179,8 +217,14 @@ function App() {
   const displayTime = savedInitialTime !== null ? timeLeft : elapsedTime;
   const formatTime = (seconds) => {
     if (seconds === null) return '∞';
-    const mins = Math.floor(seconds / 60);
+    if (seconds < 0) seconds = 0;
+    const hours = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours.toString()}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
   const progress = savedInitialTime > 0 ? (elapsedTime / savedInitialTime) * 100 : 0;
@@ -203,9 +247,10 @@ function App() {
                 <HistorySelect history={history} onSelect={handleHistorySelect} />
                 <TaskInput
                   tag={tag}
-                  durationInMinutes={durationInMinutes}
+                  hours={hours}
+                  minutes={minutes}
                   onTagChange={(newTag) => setTimerState(prev => ({ ...prev, tag: newTag }))}
-                  onDurationChange={(newDuration) => setTimerState(prev => ({ ...prev, durationInMinutes: newDuration }))}
+                  onDurationChange={handleDurationChange}
                 />
               </div>
             </div>
@@ -226,7 +271,12 @@ function App() {
                   )}
                 </svg>
                 <div className="timer-text-content">
-                  <div className="timer-time">{formatTime(displayTime)}</div>
+                  <div 
+                    className="timer-time"
+                    style={{ fontSize: formatTime(displayTime).length > 5 ? '2.5rem' : '3.5rem' }}
+                  >
+                    {formatTime(displayTime)}
+                  </div>
                   {tag && <div className="timer-tag">{tag}</div>}
                 </div>
               </div>
