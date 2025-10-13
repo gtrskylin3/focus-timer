@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Routes, Route, NavLink } from 'react-router';
 import TaskInput from './components/TaskInput.jsx';
 import HistorySelect from './components/HistorySelect.jsx';
@@ -65,6 +65,7 @@ function App() {
   
   const [history, setHistory] = useState(getInitialHistory);
   const [darkMode, setDarkMode] = useState(getInitialDarkMode);
+  const audioRef = useRef(null);
 
   // --- Effects ---
 
@@ -100,6 +101,9 @@ function App() {
           if (prev.savedInitialTime !== null) {
             const newTimeLeft = prev.savedInitialTime - elapsed;
             if (newTimeLeft <= 0) {
+              if (audioRef.current) {
+                audioRef.current.play();
+              }
               completeSession(prev.savedInitialTime, prev.savedInitialTime, prev.startTimestamp);
               return { ...prev, timeLeft: 0, isRunning: false, elapsedTime: prev.savedInitialTime };
             }
@@ -304,6 +308,7 @@ function App() {
         } />
         <Route path="/stats" element={<Stats history={history} setHistory={setHistory} darkMode={darkMode} />} />
       </Routes>
+      <audio ref={audioRef} src="/notification.mp3" />
     </div>
   );
 }

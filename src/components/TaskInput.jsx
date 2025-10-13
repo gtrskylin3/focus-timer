@@ -1,15 +1,21 @@
 function TaskInput({ tag, hours, minutes, onTagChange, onDurationChange }) {
-  const handleHoursChange = (e) => {
+  const handleTimeChange = (e, type) => {
     const value = e.target.value;
-    if (value === '' || (parseInt(value, 10) >= 0 && parseInt(value, 10) <= 16)) {
-      onDurationChange({ hours: value });
+    // Разрешаем только цифры и пустое значение
+    if (!/^\d*$/.test(value)) {
+      return;
     }
-  };
 
-  const handleMinutesChange = (e) => {
-    const value = e.target.value;
-    if (value === '' || (parseInt(value, 10) >= 0 && parseInt(value, 10) <= 59)) {
-      onDurationChange({ minutes: value });
+    const numValue = parseInt(value, 10);
+
+    if (type === 'hours') {
+      if (value === '' || (numValue >= 0 && numValue <= 16)) {
+        onDurationChange({ hours: value });
+      }
+    } else if (type === 'minutes') {
+      if (value === '' || (numValue >= 0 && numValue <= 59)) {
+        onDurationChange({ minutes: value });
+      }
     }
   };
 
@@ -34,7 +40,7 @@ function TaskInput({ tag, hours, minutes, onTagChange, onDurationChange }) {
             type="number"
             placeholder="Ч"
             value={hours}
-            onChange={handleHoursChange}
+            onChange={(e) => handleTimeChange(e, 'hours')}
             className="input-field"
             min="0"
             max="16"
@@ -47,7 +53,7 @@ function TaskInput({ tag, hours, minutes, onTagChange, onDurationChange }) {
             type="number"
             placeholder="М"
             value={minutes}
-            onChange={handleMinutesChange}
+            onChange={(e) => handleTimeChange(e, 'minutes')}
             className="input-field"
             min="0"
             max="59"
