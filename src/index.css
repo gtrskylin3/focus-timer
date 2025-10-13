@@ -359,3 +359,63 @@ body {
 .stats-table tbody tr:hover {
   background-color: var(--bg-tertiary);
 }
+
+/* --- Modal Styles --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  text-align: center;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-stats {
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.modal-stats p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.modal-quote {
+  margin-top: 2rem;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.modal-quote footer {
+  margin-top: 0.5rem;
+  font-style: normal;
+  font-weight: bold;
+  color: var(--text-primary);
+}

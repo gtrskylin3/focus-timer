@@ -3,6 +3,8 @@ import { Routes, Route, NavLink } from 'react-router';
 import TaskInput from './components/TaskInput.jsx';
 import HistorySelect from './components/HistorySelect.jsx';
 import Stats from './components/Stats.jsx';
+import CompletionModal from './components/CompletionModal.jsx';
+import { quotes } from './quotes.js';
 
 // --- Helper Functions ---
 
@@ -66,6 +68,15 @@ function App() {
   const [history, setHistory] = useState(getInitialHistory);
   const [darkMode, setDarkMode] = useState(getInitialDarkMode);
   const audioRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalData, setModalData] = useState(null);
+
+
+  const calculateTotalTagTime = (currentTag) => {
+    return history
+      .filter(session => session.tag === currentTag)
+      .reduce((total, session) => total + session.elapsed, 0);
+  };
 
   // --- Effects ---
 
@@ -104,6 +115,18 @@ function App() {
               if (audioRef.current) {
                 audioRef.current.play();
               }
+
+              const totalTagTime = calculateTotalTagTime(prev.tag) + prev.savedInitialTime;
+              const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
+              setModalData({
+                sessionDuration: prev.savedInitialTime,
+                totalTagTime: totalTagTime,
+                quote: randomQuote,
+                tag: prev.tag,
+              });
+              setIsModalOpen(true);
+
               completeSession(prev.savedInitialTime, prev.savedInitialTime, prev.startTimestamp);
               return { ...prev, timeLeft: 0, isRunning: false, elapsedTime: prev.savedInitialTime };
             }
@@ -309,6 +332,21 @@ function App() {
         <Route path="/stats" element={<Stats history={history} setHistory={setHistory} darkMode={darkMode} />} />
       </Routes>
       <audio ref={audioRef} src="/notification.mp3" />
+      <CompletionModal 
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setTimerState(prev => ({
+            ...prev,
+            isRunning: false,
+            elapsedTime: 0,
+            savedInitialTime: prev.durationInMinutes ? parseInt(prev.durationInMinutes) * 60 : null,
+            startTimestamp: null,
+            timeLeft: prev.durationInMinutes ? parseInt(prev.durationInMinutes) * 60 : 0,
+          }));
+        }}
+        sessionData={modalData}
+      />
     </div>
   );
 }
