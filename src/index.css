@@ -2,56 +2,63 @@
 @import "tailwindcss";
 
 /*
-  Переменные для светлой (по умолчанию) и темной (.dark) тем.
-  Используются для консистентности цветов во всем приложении.
+  Cyberpunk Theme Variables
+  Default theme is now dark with neon accents.
 */
 :root {
-  --bg-primary: #c3c3c3c5; /* Основной фон */
-  --bg-secondary: #f3f4f6; /* Второстепенный фон (карточки, инпуты) */
-  --bg-tertiary: #c4c5c7; /* Фон для акцентов (например, фон прогресс-бара) */
-  --text-primary: #111827; /* Основной текст */
-  --text-secondary: #6b7280; /* Второстепенный текст */
-  --border-color: #d1d5db; /* Цвет границ */
-  --link-active: #3b82f6; /* Активная ссылка/кнопка */
-  --link-hover: #2563eb; /* Ховер на ссылке/кнопке */
+  --font-heading: 'Russo One', sans-serif;
+  --font-body: 'Share Tech Mono', monospace;
 
-  /* Цвета для кнопок таймера */
-  --btn-start: #10b981; 
-  --btn-start-hover: #059669;
-  --btn-pause: #f59e0b;
-  --btn-pause-hover: #d97706;
-  --btn-stop: #ef4444;
-  --btn-stop-hover: #dc2626;
-  --btn-reset: #6b7280;
-  --btn-reset-hover: #4b5563;
+  --bg-primary: #0a0a1a;
+  /* Deep dark blue */
+  --bg-secondary: #14142c;
+  /* Slightly lighter for cards */
+  --bg-tertiary: #2a2a5a;
+  /* Hover states */
+  --text-primary: #e0e0ff;
+  /* Light lavender for readability */
+  --text-secondary: #8c8ca0;
+  /* Dimmer greyish-cyan */
+
+  --border-color: #8000ff;
+  /* Neon Cyan */
+  --glow-color: #00ffff40;
+
+  --link-active: #ff00ff;
+  /* Neon Magenta */
+  --link-hover: #ff80ff;
+  /* Lighter Magenta */
+
+  /* Button colors */
+  --btn-start: #d900ff;
+  /* --btn-start-hover:  #ff80ff; */
+  --btn-pause: #8400ff;
+  --btn-pause-hover: #ffff80;
+  --btn-stop: #ff4081;
+  --btn-stop-hover: #ff80ac;
+  --btn-reset: #d900ff;
+  --btn-reset-hover: #e0e0ff;
 }
 
-.dark {
-  --bg-primary: #111827; 
-  --bg-secondary: #1f2937;
-  --bg-tertiary: #374151;
-  --text-primary: #f9fafb;
-  --text-secondary: #9ca3af;
-  --border-color: #374151;
-  --link-active: #60a5fa;
-  --link-hover: #3b82f6;
-
-  --btn-start: #34d399;
-  --btn-start-hover: #10b981;
-  --btn-pause: #fbbf24;
-  --btn-pause-hover: #f59e0b;
-  --btn-stop: #f87171;
-  --btn-stop-hover: #ef4444;
-  --btn-reset: #9ca3af;
-  --btn-reset-hover: #6b7280;
-}
+/* No .dark class needed, this is the default */
 
 /* Глобальные стили */
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  text-shadow: 0 0 3px var(--link-active);
+  letter-spacing: 0.05em;
 }
 
 /* Основной контейнер приложения */
@@ -66,39 +73,47 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
-  background-color: var(--bg-secondary);
-  border-radius: 0.75rem;
+  padding: 0.5rem;
+  background-color: transparent;
+  border: 2px solid var(--border-color);
+  border-radius: 0;
+  /* Sharp corners */
   margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow: 0 0 10px var(--glow-color);
 }
 
 .nav-link {
   padding: 0.5rem 1rem;
   margin: 0 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: 0;
   text-decoration: none;
-  font-weight: 500;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
   color: var(--text-secondary);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .nav-link:hover {
-  background-color: var(--bg-tertiary);
-  color: var(--text-primary);
+  color: var(--link-hover);
+  text-shadow: 0 0 5px var(--link-hover);
 }
 
 .nav-link.active {
   background-color: var(--link-active);
-  color: white;
+  color: var(--bg-primary);
+  text-shadow: none;
+  box-shadow: 0 0 10px var(--link-active);
 }
 
 /* Общие стили для карточек/секций */
 .card {
   background-color: var(--bg-secondary);
-  border-radius: 0.75rem;
+  border-radius: 0;
+  /* Sharp corners */
   padding: 1.5rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  border: 2px solid var(--border-color);
+  box-shadow: inset 0 0 15px var(--glow-color), 0 0 15px var(--glow-color);
 }
 
 /* Стили для страницы таймера */
@@ -115,20 +130,23 @@ body {
 }
 
 /* Секция с таймером */
-.timer-display-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height: 300px; /* чтобы избежать скачков при изменении контента */
-}
-
 .timer-circle-container {
   position: relative;
   width: 220px;
+  /* Should match SVG width */
   height: 220px;
-  margin-bottom: 1.5rem;
+  /* Should match SVG height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  /* Center the container itself */
+}
+
+.timer-circle-container svg {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .timer-text-content {
@@ -136,30 +154,38 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .timer-time {
-  font-size: 3.5rem;
+  font-family: var(--font-body);
+  font-size: 4.5rem;
   font-weight: 700;
-  font-family: 'Courier New', Courier, monospace;
   color: var(--text-primary);
   line-height: 1;
+  text-shadow: 0 0 10px var(--border-color), 0 0 20px var(--border-color);
 }
 
 .timer-tag {
-  font-size: 1.125rem;
-  color: var(--text-secondary);
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  color: var(--link-active);
   margin-top: 0.5rem;
   font-weight: 500;
+  text-shadow: 0 0 5px var(--link-active);
 }
 
 .timer-buttons {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.75rem;
+  gap: 1rem;
   width: 100%;
   max-width: 300px;
-  margin-top: 1.5rem;
+  margin: 1.5rem auto 0 auto;
 }
 
 .timer-btn {
@@ -168,141 +194,140 @@ body {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem;
-  border: none;
-  border-radius: 0.5rem;
+  border: 1px solid;
+  border-radius: 0;
+  font-family: var(--font-heading);
   font-size: 1rem;
-  font-weight: 600;
-  color: white;
+  background-color: transparent;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
 }
 
 .timer-btn:hover:not(:disabled) {
   transform: translateY(-2px);
+  box-shadow: 0 5px 15px #00000080;
 }
 
 .timer-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+  color: var(--text-secondary) !important;
+  border-color: var(--text-secondary) !important;
+  text-shadow: none !important;
 }
 
-.btn-start { background-color: var(--btn-start); }
-.btn-start:hover:not(:disabled) { background-color: var(--btn-start-hover); }
+.btn-start {
+  color: var(--btn-start);
+  border-color: var(--btn-start);
+  text-shadow: 0 0 5px var(--btn-start);
+}
 
-.btn-pause { background-color: var(--btn-pause); }
-.btn-pause:hover:not(:disabled) { background-color: var(--btn-pause-hover); }
+.btn-start:hover:not(:disabled) {
+  background-color: var(--btn-start);
+  color: var(--bg-primary);
+  text-shadow: none;
+}
 
-.btn-stop { background-color: var(--btn-stop); }
-.btn-stop:hover:not(:disabled) { background-color: var(--btn-stop-hover); }
+.btn-pause {
+  color: var(--btn-pause);
+  border-color: var(--btn-pause);
+  text-shadow: 0 0 5px var(--btn-pause);
+}
 
-.btn-reset { background-color: var(--btn-reset); }
-.btn-reset:hover:not(:disabled) { background-color: var(--btn-reset-hover); }
+.btn-pause:hover:not(:disabled) {
+  background-color: var(--btn-pause);
+  color: var(--bg-primary);
+  text-shadow: none;
+}
+
+.btn-stop {
+  color: var(--btn-stop);
+  border-color: var(--btn-stop);
+  text-shadow: 0 0 5px var(--btn-stop);
+}
+
+.btn-stop:hover:not(:disabled) {
+  background-color: var(--btn-stop);
+  color: var(--bg-primary);
+  text-shadow: none;
+}
+
+.btn-reset {
+  color: var(--btn-reset);
+  border-color: var(--btn-reset);
+}
+
+.btn-reset:hover:not(:disabled) {
+  background-color: var(--btn-reset);
+  color: var(--bg-primary);
+}
 
 /* Стили для инпутов и селектов */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
 .input-label {
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-family: var(--font-heading);
+  font-size: 1rem;
   color: var(--text-secondary);
+  text-shadow: 0 0 2px var(--text-secondary);
 }
 
-.input-field, .select-field {
+.input-field,
+.select-field,
+.custom-select-selected {
   width: 100%;
-  padding: 0.65rem 1rem;
+  padding: 0.75rem 1rem;
   border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-  background-color: var(--bg-secondary);
+  border-radius: 0;
+  background-color: var(--bg-primary);
   color: var(--text-primary);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
 }
 
-.input-field:focus, .select-field:focus {
+.input-field:focus,
+.select-field:focus,
+.custom-select-selected:focus {
   outline: none;
   border-color: var(--link-active);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--link-active) 25%, transparent);
+  box-shadow: 0 0 10px var(--link-active);
 }
 
-/* Custom Select Component */
-.custom-select-container {
-  position: relative;
-  width: 100%;
-}
-
-.custom-select-selected {
-  padding: 0.65rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  cursor: pointer;
-  user-select: none;
-  background-position: right 0.75rem center;
-  background-size: 1.2em 1.2em;
-  padding-right: 2.5rem; 
-}
-
-
+/* Custom Select */
 .custom-select-options {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-  margin-top: 0.25rem;
-  z-index: 10;
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-
-.custom-select-option {
-  padding: 0.75rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  border-radius: 0;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--link-active);
+  box-shadow: 0 5px 15px #00000080;
 }
 
 .custom-select-option:hover {
-  background-color: var(--bg-tertiary);
+  background-color: var(--link-active);
+  color: var(--bg-primary);
 }
-
-.custom-select-option:first-child {
-  color: var(--text-secondary);
-  font-style: italic;
-}
-
-
 
 /* Стили для страницы статистики */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
 .stat-card {
-  background-color: var(--bg-secondary);
+  background-color: transparent;
   padding: 1rem;
-  border-radius: 0.75rem;
+  border-radius: 0;
+  border: 1px solid var(--text-secondary);
   text-align: center;
 }
 
 .stat-card-title {
+  font-family: var(--font-heading);
   font-weight: 600;
   color: var(--text-secondary);
+  font-size: 1.1rem;
 }
 
 .stat-card-value {
-  font-size: 1.75rem;
+  font-family: var(--font-body);
+  font-size: 2rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--border-color);
+  text-shadow: 0 0 8px var(--border-color);
 }
 
 .chart-period-selector {
@@ -310,22 +335,26 @@ body {
   justify-content: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  border: 1px solid var(--text-secondary);
+  padding: 0.5rem;
 }
 
 .period-btn {
   padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: var(--bg-tertiary);
+  border: 1px solid transparent;
+  border-radius: 0;
+  background-color: transparent;
   color: var(--text-secondary);
+  font-family: var(--font-heading);
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .period-btn.active {
-  background-color: var(--link-active);
-  color: white;
+  background-color: var(--border-color);
+  color: var(--bg-primary);
+  text-shadow: none;
 }
 
 .chart-container {
@@ -335,71 +364,158 @@ body {
   max-width: 400px;
 }
 
+/* Table Styles */
 .table-container {
   overflow-x: auto;
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  box-shadow: 0 0 10px var(--glow-color);
 }
 
 .stats-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1.5rem;
+  margin-top: 0;
+  font-size: 1rem;
 }
 
-.stats-table th, .stats-table td {
+.stats-table th,
+.stats-table td {
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color);
   text-align: left;
+  border: none;
+  border-bottom: 1px dashed var(--bg-tertiary);
 }
 
 .stats-table th {
-  background-color: var(--bg-secondary);
-  font-weight: 600;
+  font-family: var(--font-heading);
+  color: var(--link-active);
+  text-shadow: 0 0 3px var(--link-active);
+}
+
+.stats-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .stats-table tbody tr:hover {
   background-color: var(--bg-tertiary);
 }
 
-/* --- Modal Styles --- */
+.stats-table .time-col {
+  text-align: right;
+  font-weight: 500;
+  font-family: var(--font-body);
+  color: var(--border-color);
+  text-shadow: 0 0 4px var(--border-color);
+}
+
+/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: #0a0a1acc;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(5px);
 }
 
 .modal-content {
+  position: relative;
   background: var(--bg-secondary);
   padding: 2rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--link-active);
+  box-shadow: 0 0 25px var(--link-active), inset 0 0 15px var(--glow-color);
+  border-radius: 0;
   width: 90%;
   max-width: 500px;
-  position: relative;
   text-align: center;
+  /* Glitchy border effect */
+  clip-path: polygon(0% 5%, 5% 0%, 95% 0%, 100% 5%,
+      100% 95%, 95% 100%, 5% 100%, 0% 95%);
 }
 
 .modal-close-btn {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: 10px;
+  right: 15px;
   background: none;
   border: none;
-  font-size: 1.75rem;
   color: var(--text-primary);
+  font-size: 2.5rem;
+  font-family: var(--font-body);
   cursor: pointer;
-  line-height: 1;
+  text-shadow: 0 0 5px var(--text-primary);
+  transition: all 0.2s ease;
 }
 
+.modal-close-btn:hover {
+  color: var(--link-active);
+  text-shadow: 0 0 8px var(--link-active);
+}
+
+.modal-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  color: var(--border-color);
+  text-shadow: 0 0 10px var(--border-color);
+  margin-bottom: 1.5rem;
+  position: relative;
+  animation: glitch 1.5s infinite;
+}
+
+/* Glitch Animation */
+@keyframes glitch {
+
+  2%,
+  64% {
+    transform: translate(2px, 0) skew(0deg);
+  }
+
+  4%,
+  60% {
+    transform: translate(-2px, 0) skew(0deg);
+  }
+
+  62% {
+    transform: translate(0, 0) skew(5deg);
+  }
+}
+
+.modal-title::before,
+.modal-title::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.modal-title::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--link-active);
+  animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+
+.modal-title::after {
+  left: -2px;
+  text-shadow: -2px 0 var(--btn-pause), 2px 2px var(--link-active);
+  animation: glitch-anim-2 2s infinite linear alternate-reverse;
+}
+
+
 .modal-stats {
-  margin: 1.5rem 0;
+  margin-bottom: 1.5rem;
   text-align: left;
+  border: 1px solid var(--bg-tertiary);
+  padding: 1rem;
 }
 
 .modal-stats p {
@@ -407,15 +523,28 @@ body {
   font-size: 1.1rem;
 }
 
+.modal-stats strong {
+  color: var(--link-active);
+  font-weight: normal;
+}
+
 .modal-quote {
-  margin-top: 2rem;
-  font-style: italic;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  border-left: 3px solid var(--border-color);
+  padding-left: 1rem;
+  margin: 0;
+  text-align: left;
   color: var(--text-secondary);
+}
+
+.modal-quote p {
+  margin: 0;
+  font-style: italic;
 }
 
 .modal-quote footer {
   margin-top: 0.5rem;
-  font-style: normal;
-  font-weight: bold;
+  text-align: right;
   color: var(--text-primary);
 }

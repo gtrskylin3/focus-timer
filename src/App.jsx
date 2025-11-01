@@ -261,9 +261,6 @@ function App() {
       <nav className="main-nav">
         <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Таймер</NavLink>
         <NavLink to="/stats" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>Статистика</NavLink>
-        <button onClick={() => setDarkMode(p => !p)} className="nav-link" style={{ marginLeft: 'auto' }}>
-          {darkMode ? '☀️' : '🌙'}
-        </button>
       </nav>
 
       <Routes>

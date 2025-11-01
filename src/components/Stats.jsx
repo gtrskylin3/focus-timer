@@ -18,9 +18,12 @@ function Stats({ history, darkMode }) { // Получаем history как пр�
       switch (period) {
         case 'today':
           return new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-        case 'week':
-          const firstDayOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
-          return new Date(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth(), firstDayOfWeek.getDate()).getTime();
+        case 'week': {
+          const weekStart = new Date(now);
+          weekStart.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1)); // Если воскресенье (0), то смещаемся на 6 дней назад, иначе на (day - 1)
+          weekStart.setHours(0, 0, 0, 0);
+          return weekStart.getTime();
+        }
         case 'month':
           return new Date(now.getFullYear(), now.getMonth(), 1).getTime();
         case 'all':
@@ -71,9 +74,10 @@ function Stats({ history, darkMode }) { // Получаем history как пр�
     datasets: [
       {
         data: stats[chartPeriod] ? Object.values(stats[chartPeriod].stats) : [],
-        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'],
-        borderColor: 'var(--bg-secondary)', // Для красивых отступов между сегментами
-        borderWidth: 2,
+        backgroundColor: ['#ff00ff', '#8000ff', '#d900ff', '#8400ff', '#ff4081', '#5555ff'], // Neon colors from the theme
+        borderColor: '#0a0a1a', // --bg-primary
+        borderWidth: 3,
+        hoverBorderColor: '#e0e0ff', // --text-primary
       },
     ],
   };
@@ -114,18 +118,6 @@ function Stats({ history, darkMode }) { // Получаем history как пр�
           <h3 className="stat-card-title">Сегодня</h3>
           <p className="stat-card-value">{formatMinutes(stats.today?.total || 0)}</p>
         </div>
-        <div className="stat-card">
-          <h3 className="stat-card-title">Эта неделя</h3>
-          <p className="stat-card-value">{formatMinutes(stats.week?.total || 0)}</p>
-        </div>
-        <div className="stat-card">
-          <h3 className="stat-card-title">Этот месяц</h3>
-          <p className="stat-card-value">{formatMinutes(stats.month?.total || 0)}</p>
-        </div>
-        <div className="stat-card">
-          <h3 className="stat-card-title">Все время</h3>
-          <p className="stat-card-value">{formatMinutes(stats.all?.total || 0)}</p>
-        </div>
       </div>
 
       {/* Диаграмма */}
@@ -152,30 +144,40 @@ function Stats({ history, darkMode }) { // Получаем history как пр�
 
       {/* Таблица с деталями */}
       <div className="card">
-        <h2 className="text-xl font-bold mb-4">Детализация по тегам</h2>
+        <h2 className="text-xl font-bold mb-2">Детализация по тегам</h2>
+        <p className="text-secondary mb-4">
+          { {today: 'Данные за сегодня', week: 'Данные за неделю', month: 'Данные за месяц', all: 'Данные за все время'}[chartPeriod] }
+        </p>
         <div className="table-container">
-          <table className="stats-table">
-            <thead>
-              <tr>
-                <th>Тег</th>
-                <th>Сегодня</th>
-                <th>Неделя</th>
-                <th>Месяц</th>
-                <th>Все время</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allTags.map(tag => (
-                <tr key={tag}>
-                  <td className="font-bold">{tag}</td>
-                  <td className="text-center">{formatMinutes(stats.today?.stats[tag] || 0)}</td>
-                  <td className="text-center">{formatMinutes(stats.week?.stats[tag] || 0)}</td>
-                  <td className="text-center">{formatMinutes(stats.month?.stats[tag] || 0)}</td>
-                  <td className="text-center">{formatMinutes(stats.all?.stats[tag] || 0)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {
+            (() => {
+              const periodStats = stats[chartPeriod]?.stats || {};
+              const periodTags = Object.keys(periodStats).filter(tag => periodStats[tag] > 0).sort((a, b) => periodStats[b] - periodStats[a]);
+
+              if (periodTags.length === 0) {
+                return <p className="text-center text-secondary py-8">Нет данных для отображения.</p>;
+              }
+
+              return (
+                <table className="stats-table">
+                  <thead>
+                    <tr>
+                      <th>Тег</th>
+                      <th className="time-col">Время</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {periodTags.map(tag => (
+                      <tr key={tag}>
+                        <td className="font-bold">{tag}</td>
+                        <td className="time-col">{formatMinutes(periodStats[tag] || 0)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              );
+            })()
+          }
         </div>
       </div>
     </div>
